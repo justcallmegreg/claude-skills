@@ -90,11 +90,30 @@ opened with the default `GITHUB_TOKEN`, so a real token is required:
 3. In **Settings → General**, enable **Allow auto-merge**.
 4. Protect `main` with the `verify` status check required (recommended).
 
-## Using the collected skills
+## Installing the skills locally
 
-Point your Claude skills/plugins setup at the `skills/` directory (each
-subdirectory is the upstream skill repo at its pinned commit). Clone with
-submodules:
+Run `install.sh` to copy the collected skills into your Claude skills directory:
+
+```sh
+./install.sh                 # installs into ~/.claude/skills
+./install.sh --dir <path>    # or somewhere else
+```
+
+It will:
+
+1. Sync the submodules under `skills/`.
+2. Discover skills by `SKILL.md` — a submodule with `SKILL.md` at its root
+   installs as one skill; a collection (e.g. a plugin with `skills/<name>/`)
+   installs each skill it contains.
+3. Show a plan — each skill tagged **NEW**, **UPGRADE** (with change counts),
+   **UP-TO-DATE**, or **SKIP** (targets that are symlinks, such as a dev working
+   copy, are never overwritten).
+4. Check write permissions **before** doing anything, and stop with a fix tip if
+   the target isn't writable.
+5. Install only after you type **`approve`**. Skills are **copied** (not
+   symlinked), upgrades overlay in place, and **nothing is ever removed**.
+
+To consume the submodules directly instead, clone with them:
 
 ```sh
 git clone --recurse-submodules git@github.com:<you>/claude-skills.git
@@ -106,6 +125,7 @@ git submodule update --init --recursive
 
 ```
 skills.yaml                 source of truth — you edit this
+install.sh                  copy the collected skills into ~/.claude/skills
 Makefile                    make verify / make update
 scripts/
   lib.sh                    shared bash helpers
