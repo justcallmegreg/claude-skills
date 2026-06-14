@@ -1,0 +1,21 @@
+# Source of truth for the skills collector.
+#
+# Each entry becomes a git submodule at skills/<name>.
+# Edit this file, open a PR, and let CI verify + update the submodules.
+#
+# Fields:
+#   name    required, unique. Becomes the path skills/<name>.
+#   url     required. SSH form: git@github.com:owner/repo.git
+#   branch  track this branch (update bumps to its latest tip)   } exactly
+#   commit  pin to this exact 40-char commit sha                 } one of
+#
+# Example:
+#   skills:
+#     - name: superpowers
+#       url: git@github.com:obra/superpowers.git
+#       branch: main
+#     - name: pinned-skill
+#       url: git@github.com:someone/skill.git
+#       commit: 3f9a1c2e4b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f
+
+skills: []

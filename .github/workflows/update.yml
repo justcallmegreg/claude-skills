@@ -1,0 +1,68 @@
+name: update
+
+on:
+  # Fires when a PR that edits skills.yaml is merged into main.
+  push:
+    branches: [main]
+    paths:
+      - skills.yaml
+  # Daily refresh: bumps branch-tracked skills to their latest upstream tip.
+  schedule:
+    - cron: "17 5 * * *"
+  # Manual trigger from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: skills-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          # PAT/App token so the bot's PR triggers `verify` and can auto-merge.
+          token: ${{ secrets.SKILLS_BOT_TOKEN }}
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Rewrite SSH URLs to HTTPS (public repos, no secrets)
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - name: Configure bot identity
+        run: |
+          git config user.name "skills-bot"
+          git config user.email "skills-bot@users.noreply.github.com"
+
+      - name: Reconcile submodules
+        run: make update
+
+      - name: Open auto-merge PR
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.SKILLS_BOT_TOKEN }}
+          branch: bot/skills-update
+          delete-branch: true
+          title: "chore: update skills submodules"
+          body: |
+            Automated submodule update produced by `make update`.
+
+            Auto-merges once the `verify` check passes.
+
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        env:
+          GH_TOKEN: ${{ secrets.SKILLS_BOT_TOKEN }}
+        run: gh pr merge --auto --squash "${{ steps.cpr.outputs.pull-request-number }}"
