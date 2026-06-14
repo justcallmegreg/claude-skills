@@ -18,4 +18,11 @@
 #       url: git@github.com:someone/skill.git
 #       commit: 3f9a1c2e4b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f
 
-skills: []
+skills:
+  - name: class-builder
+    url: git@github.com:justcallmegreg/class-builder.git
+    branch: main
+  - name: superpowers
+    url: git@github.com:obra/superpowers.git
+    branch: main
+
