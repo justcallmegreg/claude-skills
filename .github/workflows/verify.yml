@@ -1,12 +1,12 @@
 name: verify
 
+# Runs on every PR so the required check always reports a status.
+# `make verify` is cheap (validates skills.yaml + checks refs exist), so there
+# is no harm running it even when no config files changed. A path filter here
+# would leave `verify` stuck as "Expected" on PRs that don't touch those files,
+# blocking required-check merges.
 on:
   pull_request:
-    paths:
-      - skills.yaml
-      - Makefile
-      - scripts/**
-      - .github/workflows/verify.yml
 
 permissions:
   contents: read
