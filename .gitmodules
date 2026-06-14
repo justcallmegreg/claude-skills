@@ -1,0 +1,8 @@
+[submodule "skills/class-builder"]
+	path = skills/class-builder
+	url = git@github.com:justcallmegreg/class-builder.git
+	branch = main
+[submodule "skills/superpowers"]
+	path = skills/superpowers
+	url = git@github.com:obra/superpowers.git
+	branch = main
