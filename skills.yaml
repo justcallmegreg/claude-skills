@@ -22,6 +22,9 @@ skills:
   - name: class-builder
     url: git@github.com:justcallmegreg/class-builder.git
     branch: main
+  - name: speech-writer
+    url: git@github.com:justcallmegreg/speech-writer.git
+    branch: main
   - name: superpowers
     url: git@github.com:obra/superpowers.git
     branch: main
