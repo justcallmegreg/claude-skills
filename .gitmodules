@@ -6,3 +6,7 @@
 	path = skills/superpowers
 	url = git@github.com:obra/superpowers.git
 	branch = main
+[submodule "skills/speech-writer"]
+	path = skills/speech-writer
+	url = git@github.com:justcallmegreg/speech-writer.git
+	branch = main
